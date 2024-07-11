@@ -16,7 +16,7 @@
 //
 // ##Source guideline: [CDC Guideline for Opioid Prescribing for Chronic Pain](https://www.cdc.gov/drugoverdose/prescribing/guideline.html)
 
-library Factors_to_Consider_in_Managing_Chronic_Pain_STU3_Test version '1.0.0'
+library Factors_to_Consider_in_Managing_Chronic_Pain_STU3_Test version '0.0.1'
 
 // # Data model #
 
@@ -562,13 +562,13 @@ define ReportRiskFactorsForOpioidRelatedHarms:
   if Exists(PregnancyConditions) then
     (ReportConditionRiskFactorsForOpioidRelatedHarms
       union ReportEncounterRiskFactorsForOpioidRelatedHarms
-      union ReportOlderThan65) C
+      union (if "ReportOlderThan65" is null then null else List{"ReportOlderThan65"})) C
   // Otherwise, try to find a positive pregnancy status in an Observation.
   else
     (ReportConditionRiskFactorsForOpioidRelatedHarms
       union ReportEncounterRiskFactorsForOpioidRelatedHarms
-      union ReportOlderThan65
-      union ReportMostRecentPositivePregnancyObservation) C
+      union (if "ReportOlderThan65" is null then null else List{"ReportOlderThan65"})
+      union (if "ReportMostRecentPositivePregnancyObservation" is null then null else List{"ReportMostRecentPositivePregnancyObservation"})) C
   sort by (if Onset is not null then Onset as String else Visit.Start) desc, Visit.End desc, (Abatement as String) desc
 
 // PAIN ASSESSMENT
@@ -824,7 +824,7 @@ define ReportUrineDrugScreens:
   return {
     Name:           ConceptText(S.code),
     Result:         Coalesce( QuantityText(S.value as FHIR.Quantity), (S.value as FHIR.string).value, ConceptText(S.value as FHIR.CodeableConcept) ),
-    Interpretation: Coalesce( ConceptText(S.interpretation) ),
+    Interpretation: "ConceptText"(S.interpretation),
     Date:           ObservationDate(S)
   }
   sort by Date desc

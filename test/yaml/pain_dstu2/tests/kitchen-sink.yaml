@@ -34,10 +34,6 @@ data:
   dateWritten: 2018-11-05
 -
   resourceType: MedicationOrder
-  code: RXNORM#1001437 caffeine 50 MG / magnesium salicylate 162.5 MG Oral Tablet
-  dateWritten: 2018-11-05
--
-  resourceType: MedicationOrder
   code: RXNORM#876193 POLYETHYLENE GLYCOL 3350 17000 MG Powder for Oral Solution
   dateWritten: 2018-11-05
 -
@@ -46,7 +42,7 @@ data:
   dateWritten: 2018-12-20
 -
   resourceType: MedicationStatement
-  code: RXNORM#250486 Pentazocine 50 MG Oral Capsule
+  code: RXNORM#250486 pentazocine 50 MG Oral Capsule
   effectiveDateTime: 2018-11-15
 -
   resourceType: MedicationStatement
@@ -59,10 +55,6 @@ data:
 -
   resourceType: MedicationStatement
   code: RXNORM#197591 Diazepam 5 MG Oral Tablet
-  effectiveDateTime: 2018-12-01
--
-  resourceType: MedicationStatement
-  code: RXNORM#1001437 caffeine 50 MG / magnesium salicylate 162.5 MG Oral Tablet
   effectiveDateTime: 2018-12-01
 -
   resourceType: MedicationStatement
@@ -96,23 +88,23 @@ data:
   issued: 2018-10-20
 -
   resourceType: Observation
-  code: http://cds.ahrq.gov/cdsconnect/pms#PEGASSESSMENT Pain Enjoyment General Activity (PEG) Assessment
+  code: LOINC#91147-9 Mean score [PEG]
   category: OBS-CAT#survey
   valueQuantity: 5
   issued: 2018-10-10
   component:
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGPAIN Pain
+    code: LOINC#75893-8 Pain severity in the past week - 0-10 numeric rating [Reported]
     valueQuantity: 7
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGENJOYMENT Enjoyment of life
+    code: LOINC#91145-3 What number best describes how pain has interfered with your enjoyment of life during the past week
     valueQuantity: 5
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGGENERALACTIVITY General activity
+    code: LOINC#91146-1 What number best describes how pain has interfered with your general activity during the past week
     valueQuantity: 4
 -
   resourceType: Observation
-  code: http://cds.ahrq.gov/cdsconnect/pms#STARTBACK STarT Back Screening Tool
+  code: LOINC#91351-7 Total score [STarT Back]
   category: OBS-CAT#survey
   valueQuantity: 4
   interpretation: Medium risk
@@ -162,7 +154,7 @@ results:
         Date: '2018-10-10T00:00:00.000+00:00'
       PainEnjoymentGeneralActivityAssessments:
       -
-        Name: 'Pain Enjoyment General Activity (PEG) Assessment [Range: 0-10]'
+        Name: 'Mean score [PEG] [Range: 0-10]'
         Score: '5'
         Interpretation: null
         Questions:
@@ -178,7 +170,7 @@ results:
         Date: '2018-10-10T00:00:00.000+00:00'
       STarTBackAssessments:
       -
-        Name: 'STarT Back Screening Tool [Range: 0-9]'
+        Name: 'Total score [STarT Back] [Range: 0-9]'
         Score: '4'
         Interpretation: 'Medium risk'
         Date: '2018-10-10T00:00:00.000+00:00'
@@ -186,7 +178,7 @@ results:
       OpioidMedications:
       -
         Type: Statement
-        Name: Pentazocine 50 MG Oral Capsule
+        Name: pentazocine 50 MG Oral Capsule
         Start: '2018-11-15T00:00:00.000+00:00'
         End: null
         Status: active
@@ -197,18 +189,6 @@ results:
         End: null
         Status: active
       NonOpioidMedications:
-      -
-        Type: Statement
-        Name: caffeine 50 MG / magnesium salicylate 162.5 MG Oral Tablet
-        Start: '2018-12-01T00:00:00.000+00:00'
-        End: null
-        Status: active
-      -
-        Type: Order
-        Name: caffeine 50 MG / magnesium salicylate 162.5 MG Oral Tablet
-        Start: '2018-11-05T00:00:00.000+00:00'
-        End: null
-        Status: active
       -
         Type: Order
         Name: Aspirin 75 MG Oral Tablet
@@ -221,6 +201,7 @@ results:
         Start: '2017-11-12T00:00:00.000+00:00'
         End: null
         Status: active
+      AdjuvantPainMedications: []
       NonPharmacologicTreatments:
       -
         Type: Procedure
@@ -259,7 +240,7 @@ results:
         Start: '2018-11-05T00:00:00.000+00:00'
         End: null
         Status: active
-      NaloxoneMedications:
+      NaloxoneAndNalmefeneMedications:
       -
         Type: Order
         Name: Naloxone Hydrochloride 40 MG/ML Nasal Spray

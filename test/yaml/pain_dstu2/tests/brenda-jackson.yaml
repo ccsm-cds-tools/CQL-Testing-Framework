@@ -4,6 +4,7 @@ name: Brenda Jackson
 data:
 -
   resourceType: Patient
+  id: 5c41cecf-cf81-434f-9da7-e24e5a99dbc2
   name: Brenda Jackson
   gender: female
   birthDate: 1956-10-14
@@ -35,6 +36,13 @@ data:
   category: OBS-CAT#survey
   valueQuantity: 10
   interpretation: Hurts Worst
+  issued: 2019-06-15T16:00:00.000+00:00
+-
+  resourceType: Observation
+  code: LOINC#38221-8 Pain severity Wong-Baker FACES Scale
+  category: OBS-CAT#survey
+  valueQuantity: 6
+  interpretation: Hurts Even More
   issued: 2018-10-09T16:00:00.000+00:00
 -
   resourceType: Observation
@@ -53,70 +61,70 @@ data:
 -
   # PEG
   resourceType: Observation
-  code: http://cds.ahrq.gov/cdsconnect/pms#PEGASSESSMENT Pain Enjoyment General Activity (PEG) Assessment
+  code: LOINC#91147-9 Mean score [PEG]
   category: OBS-CAT#survey
   valueQuantity: 5
-  issued: 2017-11-15T16:00:00.000+00:00
+  issued: 2018-10-09T16:00:00.000+00:00
   component:
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGPAIN Pain
+    code: LOINC#75893-8 Pain severity in the past week - 0-10 numeric rating [Reported]
     valueQuantity: 7
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGENJOYMENT Enjoyment of life
+    code: LOINC#91145-3 What number best describes how pain has interfered with your enjoyment of life during the past week
     valueQuantity: 5
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGGENERALACTIVITY General activity
+    code: LOINC#91146-1 What number best describes how pain has interfered with your general activity during the past week
     valueQuantity: 4
 -
   resourceType: Observation
-  code: http://cds.ahrq.gov/cdsconnect/pms#PEGASSESSMENT Pain Enjoyment General Activity (PEG) Assessment
+  code: LOINC#91147-9 Mean score [PEG]
   category: OBS-CAT#survey
   valueQuantity: 7
-  issued: 2017-05-30T16:00:00.000+00:00
+  issued: 2017-11-15T16:00:00.000+00:00
   component:
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGPAIN Pain
+    code: LOINC#75893-8 Pain severity in the past week - 0-10 numeric rating [Reported]
     valueQuantity: 8
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGENJOYMENT Enjoyment of life
+    code: LOINC#91145-3 What number best describes how pain has interfered with your enjoyment of life during the past week
     valueQuantity: 5
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGGENERALACTIVITY General activity
+    code: LOINC#91146-1 What number best describes how pain has interfered with your general activity during the past week
     valueQuantity: 8
 -
   resourceType: Observation
-  code: http://cds.ahrq.gov/cdsconnect/pms#PEGASSESSMENT Pain Enjoyment General Activity (PEG) Assessment
+  code: LOINC#91147-9 Mean score [PEG]
   category: OBS-CAT#survey
   valueQuantity: 8
   issued: 2016-12-02T16:00:00.000+00:00
   component:
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGPAIN Pain
+    code: LOINC#75893-8 Pain severity in the past week - 0-10 numeric rating [Reported]
     valueQuantity: 8
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGENJOYMENT Enjoyment of life
+    code: LOINC#91145-3 What number best describes how pain has interfered with your enjoyment of life during the past week
     valueQuantity: 6
   -
-    code: http://cds.ahrq.gov/cdsconnect/pms#PEGGENERALACTIVITY General activity
+    code: LOINC#91146-1 What number best describes how pain has interfered with your general activity during the past week
     valueQuantity: 10
 -
   # STarT Back
   resourceType: Observation
-  code: http://cds.ahrq.gov/cdsconnect/pms#STARTBACK STarT Back Screening Tool
+  code: LOINC#91351-7 Total score [STarT Back]
   category: OBS-CAT#survey
   valueQuantity: 4
   interpretation: Medium risk
   issued: 2018-11-15T16:00:00.000+00:00
 -
   resourceType: Observation
-  code: http://cds.ahrq.gov/cdsconnect/pms#STARTBACK STarT Back Screening Tool
+  code: LOINC#91351-7 Total score [STarT Back]
   category: OBS-CAT#survey
   valueQuantity: 3
   interpretation: Low risk
   issued: 2017-11-15T16:00:00.000+00:00
 -
   resourceType: Observation
-  code: http://cds.ahrq.gov/cdsconnect/pms#STARTBACK STarT Back Screening Tool
+  code: LOINC#91351-7 Total score [STarT Back]
   category: OBS-CAT#survey
   valueQuantity: 5
   interpretation: High risk
@@ -125,7 +133,17 @@ data:
   # Opioid Medications
   resourceType: MedicationOrder
   code: RXNORM#1049593 12 HR Oxycodone Hydrochloride 60 MG Extended Release Oral Tablet
+  dateWritten: 2019-04-15T16:02:00.000+00:00
+-
+  resourceType: MedicationOrder
+  code: RXNORM#1049593 12 HR Oxycodone Hydrochloride 60 MG Extended Release Oral Tablet
+  dateWritten: 2019-01-15T16:02:00.000+00:00
+  dateEnded: 2019-04-15T16:02:00.000+00:00
+-
+  resourceType: MedicationOrder
+  code: RXNORM#1049593 12 HR Oxycodone Hydrochloride 60 MG Extended Release Oral Tablet
   dateWritten: 2018-10-15T16:02:00.000+00:00
+  dateEnded: 2019-01-15T00:00:00.000+00:00
 -
   resourceType: MedicationOrder
   code: RXNORM#1049593 12 HR Oxycodone Hydrochloride 60 MG Extended Release Oral Tablet
@@ -169,7 +187,17 @@ data:
 -
   resourceType: MedicationOrder
   code: RXNORM#1049717 Oxycodone Hydrochloride 10 MG Oral Capsule
+  dateWritten: 2019-04-15T16:01:00.000+00:00
+-
+  resourceType: MedicationOrder
+  code: RXNORM#1049717 Oxycodone Hydrochloride 10 MG Oral Capsule
+  dateWritten: 2019-01-15T16:01:00.000+00:00
+  dateEnded: 2019-04-15T16:01:00.000+00:00
+-
+  resourceType: MedicationOrder
+  code: RXNORM#1049717 Oxycodone Hydrochloride 10 MG Oral Capsule
   dateWritten: 2018-10-15T16:01:00.000+00:00
+  dateEnded: 2019-01-15T00:00:00.000+00:00
 -
   resourceType: MedicationOrder
   code: RXNORM#1049717 Oxycodone Hydrochloride 10 MG Oral Capsule
@@ -243,6 +271,14 @@ data:
   code: SNOMEDCT#81294000 Patient referral for psychotherapy (procedure)
   performedDateTime: 2017-11-15T16:00:00.000+00:00
 -
+  resourceType: Procedure
+  code: SNOMEDCT#308449000 Referral to chiropractor (procedure)
+  performedDateTime: 2018-10-15T16:00:00.000+00:00
+-
+  resourceType: Procedure
+  code: SNOMEDCT#444831000124102 Referral for physical therapy (procedure)
+  performedDateTime: 2018-10-15T16:00:00.000+00:00
+-
   # Stool Softeners and Laxatives
   resourceType: MedicationOrder
   code: RXNORM#876193 POLYETHYLENE GLYCOL 3350 17000 MG Powder for Oral Solution
@@ -257,8 +293,30 @@ data:
   resourceType: MedicationOrder
   code: RXNORM#876193 POLYETHYLENE GLYCOL 3350 17000 MG Powder for Oral Solution
   dateWritten: 2018-05-15T16:00:00.000+00:00
+  dateEnded: 2018-11-15T00:00:00.000+00:00
+-
+  resourceType: MedicationOrder
+  code: RXNORM#876193 POLYETHYLENE GLYCOL 3350 17000 MG Powder for Oral Solution
+  dateWritten: 2019-01-15T16:00:00.000+00:00
+  dateEnded: 2019-04-15T16:00:00.000+00:00
+-
+  resourceType: MedicationOrder
+  code: RXNORM#876193 POLYETHYLENE GLYCOL 3350 17000 MG Powder for Oral Solution
+  dateWritten: 2019-04-15T16:00:00.000+00:00
 -
   # Most Recent MME
+  resourceType: Observation
+  code: http://cds.ahrq.gov/cdsconnect/pms#MME Morphine Milligram Equivalent (MME)
+  category: OBS-CAT#therapy
+  valueQuantity: 220 {MME}/d
+  issued: 2019-04-15T16:00:00.000+00:00
+-
+  resourceType: Observation
+  code: http://cds.ahrq.gov/cdsconnect/pms#MME Morphine Milligram Equivalent (MME)
+  category: OBS-CAT#therapy
+  valueQuantity: 220 {MME}/d
+  issued: 2019-01-15T16:00:00.000+00:00
+-
   resourceType: Observation
   code: http://cds.ahrq.gov/cdsconnect/pms#MME Morphine Milligram Equivalent (MME)
   category: OBS-CAT#therapy
@@ -278,6 +336,12 @@ data:
   issued: 2016-12-02T16:00:00.000+00:00
 -
   # Urine Drug Screens
+  resourceType: Observation
+  code: LOINC#19295-5 Opiates [Presence] in Urine by Screen method
+  valueQuantity: 2500 ng/mL
+  interpretation: http://hl7.org/fhir/v2/0078#POS Positive
+  issued: 2018-10-15T16:00:00.000+00:00
+-
   resourceType: Observation
   code: LOINC#19295-5 Opiates [Presence] in Urine by Screen method
   valueQuantity: 2500 ng/mL
@@ -349,15 +413,15 @@ results:
     PainAssessments:
       NumericPainIntensityAssessments:
         - Name: 'Pain severity Wong-Baker FACES Scale [Range: 0-10]'
-          Score: '10'
-          Interpretation: Hurts Worst
+          Score: '6'
+          Interpretation: Hurts Even More
           Date: '2018-10-09T16:00:00.000+00:00'
         - Name: 'Pain severity Wong-Baker FACES Scale [Range: 0-10]'
           Score: '6'
           Interpretation: Hurts Even More
           Date: '2017-11-15T16:00:00.000+00:00'
       PainEnjoymentGeneralActivityAssessments:
-        - Name: 'Pain Enjoyment General Activity (PEG) Assessment [Range: 0-10]'
+        - Name: 'Mean score [PEG] [Range: 0-10]'
           Score: '5'
           Interpretation: null
           Questions:
@@ -367,8 +431,8 @@ results:
               Score: '5'
             - Name: General activity
               Score: '4'
-          Date: '2017-11-15T16:00:00.000+00:00'
-        - Name: 'Pain Enjoyment General Activity (PEG) Assessment [Range: 0-10]'
+          Date: '2018-10-09T16:00:00.000+00:00'
+        - Name: 'Mean score [PEG] [Range: 0-10]'
           Score: '7'
           Interpretation: null
           Questions:
@@ -378,13 +442,13 @@ results:
               Score: '5'
             - Name: General activity
               Score: '8'
-          Date: '2017-05-30T16:00:00.000+00:00'
+          Date: '2017-11-15T16:00:00.000+00:00'
       STarTBackAssessments:
-        - Name: 'STarT Back Screening Tool [Range: 0-9]'
+        - Name: 'Total score [STarT Back] [Range: 0-9]'
           Score: '4'
           Interpretation: Medium risk
           Date: '2018-11-15T16:00:00.000+00:00'
-        - Name: 'STarT Back Screening Tool [Range: 0-9]'
+        - Name: 'Total score [STarT Back] [Range: 0-9]'
           Score: '3'
           Interpretation: Low risk
           Date: '2017-11-15T16:00:00.000+00:00'
@@ -393,12 +457,12 @@ results:
         - Type: Order
           Name: 12 HR Oxycodone Hydrochloride 60 MG Extended Release Oral Tablet
           Start: '2018-10-15T16:02:00.000+00:00'
-          End: null
+          End: '2019-01-15T00:00:00.000+00:00'
           Status: active
         - Type: Order
           Name: Oxycodone Hydrochloride 10 MG Oral Capsule
           Start: '2018-10-15T16:01:00.000+00:00'
-          End: null
+          End: '2019-01-15T00:00:00.000+00:00'
           Status: active
         - Type: Order
           Name: 12 HR Oxycodone Hydrochloride 60 MG Extended Release Oral Tablet
@@ -481,7 +545,14 @@ results:
           Start: '2017-11-15T16:00:00.000+00:00'
           End: null
           Status: active
+      AdjuvantPainMedications: []
       NonPharmacologicTreatments:
+        - Type: Procedure
+          Name: Referral to chiropractor (procedure)
+          Date: '2018-10-15T16:00:00.000+00:00'
+        - Type: Procedure
+          Name: Referral for physical therapy (procedure)
+          Date: '2018-10-15T16:00:00.000+00:00'
         - Type: Procedure
           Name: Patient referral for psychotherapy (procedure)
           Date: '2017-11-15T16:00:00.000+00:00'
@@ -491,9 +562,13 @@ results:
         Name: Morphine Milligram Equivalent (MME)
         Result: '220 {MME}/d'
         Date: '2018-10-09T16:00:00.000+00:00'
-      UrineDrugScreens: []
+      UrineDrugScreens:
+        - Name: Opiates [Presence] in Urine by Screen method
+          Date: '2018-10-15T16:00:00.000+00:00'
+          Result: 2500 ng/mL
+          Interpretation: Positive
       BenzodiazepineMedications: []
-      NaloxoneMedications: []
+      NaloxoneAndNalmefeneMedications: []
       RiskScreeningsRelevantToPainManagement:
         - Name: >-
             Patient Health Questionnaire 9 item (PHQ-9) total score [Reported]

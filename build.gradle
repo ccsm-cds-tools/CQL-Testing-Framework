@@ -7,15 +7,15 @@ repositories {
 }
 
 dependencies {
-  runtimeOnly 'info.cqframework:cql-to-elm-cli:3.2.0'
+  runtimeOnly 'info.cqframework:cql-to-elm-cli:3.12.0'
 }
 
 task cql2elm(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = 'org.cqframework.cql.cql2elm.cli.Main'
   if (project.hasProperty("targetDir")) {
-    args '--input', targetDir, '--format', 'JSON'
+    args '--input', targetDir, '--format', 'JSON', '--annotations', '--locators', '--result-types', '--signatures', 'All', '--disable-list-demotion', '--disable-list-promotion'
   } else { // NOTE: For translating CQL for `cql-testing` built-in tests.
-    args '--input', './test/yaml', '--format', 'JSON'
+    args '--input', './test/yaml', '--format', 'JSON', '--annotations', '--locators', '--result-types', '--signatures', 'All', '--disable-list-demotion', '--disable-list-promotion'
   }
 }

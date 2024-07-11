@@ -1,4 +1,12 @@
-library CDS_Connect_Commons_for_FHIRv400 version '1.0.0'
+// CDS Connect Commons for FHIRv400
+// Change log:
+// - 1.0.1
+//   - Fix logic for ActiveOrRecurring to use equivalence matching (instead of "in"
+//     which uses equality matching)
+//   - Add back ...ByConcept functions for backwards compatibility w/ libraries that
+//     might expect them
+//   - Consider effectiveInstant in ObservationLookBack
+library CDS_Connect_Commons_for_FHIRv400 version '1.0.1'
 
 using FHIR version '4.0.0'
 
@@ -55,6 +63,15 @@ define function RangeToInterval(range FHIR.Range):
 // -------------------------------------------------- OBSERVATIONS -----------------------------------------------------
 
 /**
+ * Filters Observations by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<Observation>} a list of Observations matching the concept, or null if null was passed in
+ */
+define function ObservationsByConcept(Koncept System.Concept):
+  [Observation] O where FHIRHelpers.ToConcept(O.code) ~ Koncept
+
+/**
  * Observations that are complete and verified. In FHIR R4, there are three statuses that indicate this state: 'final',
  * 'corrected', and 'amended'.
  * @see http://hl7.org/fhir/R4/valueset-observation-status.html
@@ -86,6 +103,7 @@ define function ObservationLookBack(ObsList List<Observation>, LookBack System.Q
   ObsList O
     let LookBackInterval: Interval[Now() - LookBack, Now()]
     where (O.effective as FHIR.dateTime).value in LookBackInterval
+      or (O.effective as FHIR.instant).value in LookBackInterval
       or PeriodToInterval(O.effective as FHIR.Period) overlaps LookBackInterval
       or O.issued.value in LookBackInterval
 
@@ -152,6 +170,15 @@ define function HighestObservation(ObsList List<Observation>):
 // -------------------------------------------------- CONDITIONS -------------------------------------------------------
 
 /**
+ * Filters Conditions by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<Observation>} a list of Conditions matching the concept, or null if null was passed in
+ */
+define function ConditionsByConcept(Koncept System.Concept):
+  [Condition] C where FHIRHelpers.ToConcept(C.code) ~ Koncept
+
+/**
  * Conditions that are confirmed. In FHIR R4, this is reflected by verificationStatus: 'confirmed'.
  * @see http://hl7.org/fhir/R4/valueset-condition-ver-status.html
  * @param CondList - a list of Conditions
@@ -182,7 +209,10 @@ define function ActiveCondition(CondList List<Condition>):
  * @returns {List<Condition>} a list of active or recurring Conditions, or null if null was passed in
  */
 define function ActiveOrRecurring(CondList List<Condition>):
-  CondList C where C.clinicalStatus in {"Condition Active", "Condition Recurrence", "Condition Relapse"}
+  CondList C
+    where C.clinicalStatus ~ "Condition Active"
+      or C.clinicalStatus ~ "Condition Recurrence"
+      or C.clinicalStatus ~ "Condition Relapse"
 
 /**
  * Conditions with an onset or recorded date in the specified "look back" period.  For example, pregnancy in
@@ -215,6 +245,15 @@ define function MostRecentCondition(CondList List<Condition>):
   )
 
  // -------------------------------------------------- PROCEDURES ------------------------------------------------------
+
+ /**
+  * Filters Procedures by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
+  * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+  * @returns {List<Procedure>} a list of Procedures matching the concept, or null if null was passed in
+  */
+ define function ProceduresByConcept(Koncept System.Concept):
+   [Procedure] P where FHIRHelpers.ToConcept(P.code) ~ Koncept
 
 /**
  * Procedures that are completed. In FHIR R4, this is reflected by status: 'completed'.
@@ -308,6 +347,24 @@ define function ServiceRequestLookBack(ServiceRequestList List<ServiceRequest>, 
 // -------------------------------------------------- MEDICATIONS ------------------------------------------------------
 
 /**
+ * Filters MedicationStatements by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<MedicationStatement>} a list of MedicationStatement matching the concept, or null if null was passed in
+ */
+define function MedicationStatementsByConcept(Koncept System.Concept):
+  [MedicationStatement] M where FHIRHelpers.ToConcept(M.medication as FHIR.CodeableConcept) ~ Koncept
+
+/**
+ * Filters MedicationRequests by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<MedicationRequest>} a list of MedicationRequests matching the concept, or null if null was passed in
+ */
+define function MedicationRequestsByConcept(Koncept System.Concept):
+  [MedicationRequest] M where FHIRHelpers.ToConcept(M.medication as FHIR.CodeableConcept) ~ Koncept
+
+/**
  * Medications that are active, according to a statement, but not necessarily verified via a prescription.  For example,
  * medications that a patient has self-reported to be taking.  This may, however, also represent medications that are
  * expected to be active after providing a prescription (e.g., clinician-reported). In FHIR R4, this is reflected by
@@ -375,7 +432,7 @@ define function ActiveOrCompletedMedicationStatement(MedList List<MedicationStat
 * reflected by MedicationRequest with status 'active', 'completed', or 'stopped'. See the note above
 * (in ActiveMedicationRequest) for more nuance regarding MedicationRequest vs. MedicationStatement.
 * @see http://hl7.org/fhir/R4/valueset-medicationrequest-status.html
-* @param MedList - a list of MedicationRequests
+* @param MedList - a list of MedicationOrders
 * @returns {List<MedicationRequestr>} a list of active medication requests, or null if null was passed in
 */
 define function ActiveCompletedOrStoppedMedicationRequest(MedList List<MedicationRequest>):
@@ -393,10 +450,10 @@ define function ActiveCompletedOrStoppedMedicationRequest(MedList List<Medicatio
 * was passed in
 */
 define function MedicationRequestLookBack(MedList List<MedicationRequest>, LookBack System.Quantity):
-MedList M
-  let LookBackInterval: Interval[Now() - LookBack, Now()]
-  where M.authoredOn.value in LookBackInterval
-  // DSTU2 also checked the dateEnded property of MedicationRequest, but this doesn't exist for MedicationRequest
+  MedList M
+    let LookBackInterval: Interval[Now() - LookBack, Now()]
+    where M.authoredOn.value in LookBackInterval
+    // DSTU2 also checked the dateEnded property of MedicationOrder, but this doesn't exist for MedicationRequest
 
 /**
 * Medication Statements that are issued in the specified "look back" period.
@@ -407,12 +464,21 @@ MedList M
 * was passed in
 */
 define function MedicationStatementLookBack(MedList List<MedicationStatement>, LookBack System.Quantity):
-MedList M
-  let LookBackInterval: Interval[Now() - LookBack, Now()]
-  where (M.effective as FHIR.dateTime).value in LookBackInterval
-    or PeriodToInterval(M.effective as FHIR.Period) overlaps LookBackInterval
+  MedList M
+    let LookBackInterval: Interval[Now() - LookBack, Now()]
+    where (M.effective as FHIR.dateTime).value in LookBackInterval
+      or PeriodToInterval(M.effective as FHIR.Period) overlaps LookBackInterval
 
 // -------------------------------------------------- ENCOUNTERS ------------------------------------------------------
+
+/**
+ * Filters Encounters by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<Encounter>} a list of Encounters matching the concept, or null if null was passed in
+ */
+define function EncountersByConcept(Koncept System.Concept):
+  [Encounter] E where exists( (E.type) ET where FHIRHelpers.ToConcept(ET) ~ Koncept )
 
 /**
  * Encounters that are in progress. In FHIR R4, this is reflected by status: 'in-progress'.
@@ -425,6 +491,15 @@ define function InProgress(EncList List<Encounter>):
     where E.status.value = 'in-progress'
 
 // -------------------------------------------------- ALLERGY INTOLERANCES ------------------------------------------------------
+
+/**
+ * Filters AllergyIntolerances by a concept rather than by a ValueSet.  In CQL 1.3, this is built into the retrieve,
+ * but for backwards compatibility, we keep this query where clause as an option.
+ * @param Koncept - the concept to filter on (intentionally mispelled to avoid naming clashes)
+ * @returns {List<AllergyIntolerance>} a list of Allergy Intolerances matching the concept, or null if null was passed in
+ */
+define function AllergyIntolerancesByConcept(Koncept System.Concept):
+  [AllergyIntolerance] A where FHIRHelpers.ToConcept(A.code) ~ Koncept
 
 /**
 * AllergyIntolerances that are active or confirmed.  In FHIR STU3, this is reflected by AllergyIntolerance
