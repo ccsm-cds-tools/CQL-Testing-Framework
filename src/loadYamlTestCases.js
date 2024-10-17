@@ -41,14 +41,14 @@ function yamlToTestCases(yamlFilePath, fhirVersion) {
   // Get document as a string
   let docString = fs.readFileSync(yamlFilePath, 'utf8');
   // Look for any referenced external data files
-  let matches = docString.match(/externalData:\s*(\[?-?\s*\w*\s*,?\]?)+/);
+  let matches = docString.match(/externalData:\s*(\[?-?\s*[\w./-]*\s*,?\]?)+/);
   matches = matches ? matches[0] : null;
   let extDataFiles = [''];
   if (matches) {
     let matchNames = matches.split('[');
     if (matchNames.length == 1) { // There are no square brackets
       // This must be a block style array.
-      extDataFiles = matchNames[0].match(/(-\s*\w*)+/g);
+      extDataFiles = matchNames[0].match(/(-\s*[\w./-]*)+/g);
       extDataFiles = extDataFiles.map(file => file.replace(/-\s*/,''));
     } else { // There are square brackets
       // This must be a flow style array
@@ -114,12 +114,19 @@ function yamlToTestCases(yamlFilePath, fhirVersion) {
     }
 
     // Handle the patient
-    if (doc.data.length === 0 || doc.data[0].resourceType !== 'Patient') {
+    if (doc.data.length === 0) {
       console.warn(`${testName}: First element was not a patient.  Inserting a patient element.`);
       doc.data = doc.data.unshift({ resourceType: 'Patient' });
     }
 
-    const p = yaml2fhir(doc.data[0], null, fhirVersion);
+    let p = yaml2fhir(doc.data[0], null, fhirVersion);
+
+    if (p.resourceType !== 'Patient') {
+      console.warn(`${testName}: First element was not a patient.  Inserting a patient element.`);
+      doc.data = doc.data.unshift({ resourceType: 'Patient' });
+      p = yaml2fhir(doc.data[0], null, fhirVersion);
+    }
+
     addResource(p);
 
     for (let i = 1; i < doc.data.length; i++) {
