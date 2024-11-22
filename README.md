@@ -293,7 +293,7 @@ CQLT Config: /path/to/my/cql/project/test/cqlt.yaml
 
 ## Generating CQL library coverage reports
 
-Test coverage reports describing total number of expressions in a library, number of covered expressions, and list of uncovered expressions can be generated using the custom Mocha coverage reporter. Setup the additional script `test:coverage` in `package.json` as below. By default the reporter displays a coverage summary to the console. If dumpFiles are enabled, it will write a detailed report to the results folder in the dumpFiles path for each test suite.
+Test coverage reports describing total number of expressions in the library, number of covered expressions, and list of uncovered expressions can be generated using the custom Mocha coverage reporter. Setup the additional script `test:coverage` in `package.json` as below. By default the reporter displays a coverage summary to the console. If dumpFiles are enabled, it will write a detailed report to the results folder in the dumpFiles path for each test suite.
 
 ```json
 {
@@ -309,6 +309,7 @@ Test coverage reports describing total number of expressions in a library, numbe
     "cql-execution": "^1.3.7"
   }
 }
+```
 
 ```sh
 $ npm run test:coverage

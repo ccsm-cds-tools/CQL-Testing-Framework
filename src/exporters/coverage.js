@@ -16,6 +16,7 @@ class LibraryCoverageReporter extends Mocha.reporters.Base{
     runner.on(Mocha.Runner.constants.EVENT_SUITE_END, () => {
       if(currentSuite.coverageReport){
         const cr = currentSuite.coverageReport;
+        // eslint-disable-next-line no-console
         console.log(`${cr.library.id}: ${cr.covered}/${cr.total} ${100 * (cr.covered/cr.total)}%`);
         const jsonOutput = JSON.stringify(cr, null, 2);
         // only write file if dumpResultsPath set, otherwise just write summary to console
@@ -47,13 +48,13 @@ class LibraryCoverageReporter extends Mocha.reporters.Base{
       }
   
       // Check if the current object has a 'localId' property
-      if (obj.hasOwnProperty('localId')) {
+      if (Object.prototype.hasOwnProperty.call(obj, 'localId')) {
         const localId = obj.localId;
         const extractedData = {};
   
         // Iterate over the properties of the object
         for (const key in obj) {
-          if (obj.hasOwnProperty(key)) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
             const value = obj[key];
             // Check if the value is a literal (not an object or array)
             if (value !== null && typeof value !== 'object') {
@@ -74,7 +75,7 @@ class LibraryCoverageReporter extends Mocha.reporters.Base{
   
       // Recursively search through all properties of the object, skipping signature and resultTypeSpecifier
       for (const key in obj) {
-        if (obj.hasOwnProperty(key) && key !== 'signature' && key !== 'resultTypeSpecifier') {
+        if (Object.prototype.hasOwnProperty.call(obj, key) && key !== 'signature' && key !== 'resultTypeSpecifier') {
           recursiveSearch(obj[key]);
         }
       }
@@ -93,7 +94,7 @@ class LibraryCoverageReporter extends Mocha.reporters.Base{
     const keys = Object.keys(testCaseResults[patientId][coverageReport.library.id]);
     for (const key of keys) {
       // Check if the key exists in the expressions map
-      if (coverageReport.uncoveredExpressions.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(coverageReport.uncoveredExpressions, key)) {
         // Remove the key from the expressions map
         delete coverageReport.uncoveredExpressions[key];
         coverageReport.covered += 1;
