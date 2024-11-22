@@ -83,7 +83,7 @@ function buildTestSuite(testCases, library, codeService, fhirVersion, config) {
 
     let coverageReport;
     before('Initialize coverage report', () => {
-      coverageReport = coverageExporter.initCoverageReport(library.source.library, dumpResultsPath);
+      coverageReport = coverageExporter.initCoverageReport(library.source.library, config.get('library.paths'));
       this.coverageReport  = coverageReport;
     });     
 
