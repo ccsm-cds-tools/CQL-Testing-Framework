@@ -8,41 +8,49 @@ class LibraryCoverageReporter extends Mocha.reporters.Base {
   constructor(runner) {
     super(runner);
 
-    let currentSuite = null;
+    let coverageReport = null;
     const coverageReports = [];
 
     runner.on(Mocha.Runner.constants.EVENT_SUITE_BEGIN, (suite) => {
-      currentSuite = suite;
+      coverageReport = null;
+      suite.on('initCoverageReport', (library) => {
+        if (library) {
+          coverageReport = LibraryCoverageReporter.initCoverageReport(library.source, library.paths);
+          coverageReports.push(coverageReport);
+        }
+      });
     });
 
-    runner.on(Mocha.Runner.constants.EVENT_SUITE_END, () => {
-      if (currentSuite.coverageReport) {
-        coverageReports.push(currentSuite.coverageReport);
+    runner.on(Mocha.Runner.constants.EVENT_TEST_BEGIN, (test) => {
+      if (coverageReport) {
+        test.on('addLocalIdResultMap', (localIdResultsMap) => {
+          LibraryCoverageReporter.addLocalIdResultMap(localIdResultsMap, coverageReport);
+        });
       }
     });
 
     runner.on(Mocha.Runner.constants.EVENT_RUN_END, () => {
       const coverage = [];
       for (const coverageReport of coverageReports) {
-        if(coverageReport.paths == null || coverageReport.paths.length > 1){
+        if (coverageReport.paths == null || coverageReport.paths.length > 1) {
           console.error('Library paths must be set to a single path');
         }
         const coverageData = {
           path: path.join(coverageReport.paths[0], `${coverageReport.library.id}.cql`),
-          statementMap: this.parseExpressonLocator(coverageReport.expressions),
+          statementMap: LibraryCoverageReporter.parseExpressonLocator(coverageReport.expressions),
           fnMap: {},
           branchMap: {},
           s: coverageReport.covered,
           f: {},
           b: {}
-        };      
+        };
         coverage.push(coverageData);
       }
       LibraryCoverageReporter.writeReport(coverage, 'coverage');
     });
   }
 
-  parseExpressonLocator(originalObject) {
+  static parseExpressonLocator(originalObject) {
     const parsedObject = {};
 
     for (const key in originalObject) {
@@ -56,8 +64,8 @@ class LibraryCoverageReporter extends Mocha.reporters.Base {
           : [startLine, startColumn];
 
         parsedObject[key] = {
-          start: { line: startLine, column: startColumn },
-          end: { line: endLine, column: endColumn }
+          start: { line: startLine, column: startColumn > 0 ? startColumn - 1 : startColumn },
+          end: { line: endLine, column: endColumn > 0 ? endColumn - 1 : endColumn }
         };
       }
     }
@@ -69,7 +77,7 @@ class LibraryCoverageReporter extends Mocha.reporters.Base {
     const coverageMap = createMap({});
     for (const coverageData of coverage) {
       coverageMap.addFileCoverage(coverageData);
-    }    
+    }
 
     // create a context for report generation
     const context = libReport.createContext({
@@ -120,7 +128,7 @@ class LibraryCoverageReporter extends Mocha.reporters.Base {
           // Check if the value is a literal (not an object or array)
           if (value !== null && typeof value !== 'object') {
             extractedData[key] = value;
-          }          
+          }
         }
 
         // Check if 'locator' and 'type' is not null in the extracted data
@@ -149,10 +157,10 @@ class LibraryCoverageReporter extends Mocha.reporters.Base {
     return resultObject;
   }
 
-  static addLocalIdResultMap(testCaseResults, patientId, coverageReport) {
+  static addLocalIdResultMap(localIdResultMap, coverageReport) {
+    if (localIdResultMap == null) { return; }
     // Iterate over each key in the results map
-    const keys = Object.keys(testCaseResults[patientId][coverageReport.library.id]);
-    for (const localId of keys) {
+    for (const localId in localIdResultMap[coverageReport.library.id]) {
       // Check if the key exists in the expressions map
       if (coverageReport.expressions[localId]) {
         coverageReport.covered[localId] += 1;

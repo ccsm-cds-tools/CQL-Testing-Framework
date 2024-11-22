@@ -5,7 +5,6 @@ const fhir = require('cql-exec-fhir');
 const {expect} = require('chai');
 const hooksExporter = require('./exporters/hooks');
 const postmanExporter = require('./exporters/postman');
-const coverageExporter = require('./exporters/coverage');
 
 function buildTestSuite(testCases, library, codeService, fhirVersion, config) {
   const identifier = library.source.library.identifier;
@@ -81,17 +80,16 @@ function buildTestSuite(testCases, library, codeService, fhirVersion, config) {
       });
     }
 
-    let coverageReport;
     before('Initialize coverage report', () => {
-      coverageReport = coverageExporter.initCoverageReport(library.source.library, config.get('library.paths'));
-      this.coverageReport  = coverageReport;
-    });     
+      this.emit('initCoverageReport', 
+        { source: library.source.library, paths: config.get('library.paths')});
+    });      
 
     afterEach('Reset the patient source', () => patientSource.reset());
 
     for (const testCase of testCases) {
       const testFunc = testCase.skip ? it.skip : testCase.only ? it.only : it;
-      testFunc(testCase.name, () => {
+      testFunc(testCase.name, function() {
         const dumpFileName = `${testCase.name.replace(/[\s/\\]/g, '_')}.json`;
         if (dumpBundlesPath) {
           const filePath = path.join(dumpBundlesPath, dumpFileName);
@@ -115,7 +113,7 @@ function buildTestSuite(testCases, library, codeService, fhirVersion, config) {
             fs.writeFileSync(filePath, JSON.stringify(results, null, 2), 'utf8');
           }
           const patientId = testCase.bundle.entry[0].resource.id;
-          coverageExporter.addLocalIdResultMap(results.localIdPatientResultsMap, patientId, coverageReport);
+          this.test.emit('addLocalIdResultMap', results.localIdPatientResultsMap[patientId]);    
           expect(results.patientResults[patientId]).to.exist;
           for (const expr of Object.keys(testCase.expected)) {
             checkResult(expr, results.patientResults[patientId][expr], testCase.expected[expr]);
