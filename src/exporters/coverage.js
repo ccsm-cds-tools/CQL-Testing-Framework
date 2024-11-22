@@ -24,8 +24,11 @@ class LibraryCoverageReporter extends Mocha.reporters.Base {
     runner.on(Mocha.Runner.constants.EVENT_RUN_END, () => {
       const coverage = [];
       for (const coverageReport of coverageReports) {
+        if(coverageReport.paths == null || coverageReport.paths.length > 1){
+          console.error('Library paths must be set to a single path');
+        }
         const coverageData = {
-          path: path.join(coverageReport.paths[0], `${coverageReport.library.id}.cql`), //will fail if multiple paths
+          path: path.join(coverageReport.paths[0], `${coverageReport.library.id}.cql`),
           statementMap: this.parseExpressonLocator(coverageReport.expressions),
           fnMap: {},
           branchMap: {},
@@ -46,8 +49,11 @@ class LibraryCoverageReporter extends Mocha.reporters.Base {
       if (originalObject[key].locator) {
         const locator = originalObject[key].locator;
         const [start, end] = locator.split('-');
-        const [startLine, startColumn] = start.split(':').map(Number);
-        const [endLine, endColumn] = end.split(':').map(Number);
+        const [startLine, startColumn] = start.includes(':') ? 
+          start.split(':').map(Number) : [Number(start), 0];
+        const [endLine, endColumn] = end !== undefined ?
+          (end.includes(':') ? end.split(':').map(Number) : [Number(end), 0])
+          : [startLine, startColumn];
 
         parsedObject[key] = {
           start: { line: startLine, column: startColumn },
